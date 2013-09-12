@@ -17,18 +17,22 @@ def getInformation(www):
     result = result.group(1)#replace.sub(' ', result.group(1))
     #print result
     fout.write(result + '\n')
+num = 0
 def getIndex(website, location):
     response = urllib2.urlopen(website + location)
     html = response.read()
     result = nameRule.findall(html)
     for i in result:
-        print website + i[0]
+        global num
+        num = num + 1
+        print num, website + i[0]
         fout.write(website + i[0] + '\n')
         fout.write(i[1] + '\n')
         fout.write(i[2] + '\n')
         getInformation(website + urllib.quote(i[0], ";/?:@&=+$,") + '\n')
         fout.write("%%\n")
 website = "http://www.wikicfp.com"
-location = "/cfp/series?t=c&i=A"
-getIndex(website, location)
+location = "/cfp/series?t=c&i="
+for i in ['A', 'B']:
+    getIndex(website, location + i)
 fout.close()

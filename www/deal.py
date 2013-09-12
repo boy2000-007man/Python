@@ -6,27 +6,32 @@ replace = re.compile('\n|\t|\r|<br>|\W|_')
 fin = file("data.txt", 'r')
 totalWord = list()
 wordSet = set()
+URL = list()
 
 def process():
-    if not fin.readline():
+    dic = {}
+    line = fin.readline()
+    if not line:
         return None
-    words = list()
+    dic['url'] = line
+    line = fin.readline()
+    dic['title'] = line
+    line = fin.readline()
+    dic['sub'] = line
+    URL.append(dic)
+    words = wordSplit.split(replace.sub(' ', dic['title'].lower())) + wordSplit.split(replace.sub(' ', dic['sub'].lower()))
     while 1:
         line = fin.readline()
         if line == "%%\n":
             break
-        words += wordSplit.split(replace.sub(' ', line))
+        words += wordSplit.split(replace.sub(' ', line.lower()))
     tmp = set(words)
     totalWord.append(tmp)
     global wordSet
     wordSet |= tmp
-    #print wordSet
     return tmp
 while process():
     pass
-#print totalWord
-#print wordSet
-print wordSet
 fout = file("res.txt", "w")
 dic = {}
 for x in wordSet:
@@ -37,7 +42,21 @@ for x in wordSet:
             tmp.append(i)
         i = i + 1
     dic[x] = tmp
-def search(word):
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+index = """<title>Supervisor Search Engine</title>
+    <form method="GET" action="/search">
+    Word:<input type="text" name="word">
+    <input type="submit"/>
+    </form>"""
+@csrf_exempt
+def search(request):
+    if not request.word:
+        return HttpResponse(index)
+    word = word.lower()
     if not dic.has_key(word):
         return None
-    return dic[word]
+    tmp = list()
+    for x in dic[word]:
+        tmp.append(URL[x])
+    return tmp

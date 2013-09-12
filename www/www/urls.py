@@ -8,7 +8,7 @@ from django.conf import settings
 urlpatterns = patterns('',
         #url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root':settings.STATIC_ROOT}),
         url(r'^test/', 'www.test.test'),
-        url(r'^search$', 'www.search.search'),
+        url(r'^search$', 'www.deal.search'),
     # Examples:
     # url(r'^$', 'www.views.home', name='home'),
     # url(r'^www/', include('www.foo.urls')),
