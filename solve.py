@@ -20,6 +20,7 @@ def listInt(slist):
         La += toInt(x)
     return La
 delete = re.compile('\s*')
+fout = file('ans.txt', 'w')
 for line in fin:
     line = delete.sub('', line)
     print line
@@ -46,6 +47,10 @@ for line in fin:
     C = Lc - Rc
     D = B ** 2 - 4 * A * C
     if D < 0:
-        print "x1 = ", (-B-complex(0,1)*math.sqrt(-1*D))/(2*A), ",x2 = ", (-B+complex(0,1)*math.sqrt(-1*D))/(2*A)
+        print "x1 = ", (-B-complex(0,1)*math.sqrt(-1*D))/(2*A), ", x2 = ", (-B+complex(0,1)*math.sqrt(-1*D))/(2*A)
+        fout.write("x1 = " + str((-B-complex(0,1)*math.sqrt(-1*D))/(2*A)) + ", x2 = " + str((-B+complex(0,1)*math.sqrt(-1*D))/(2*A)) + '\n')
     else:
-        print "x1 = ", (-B-math.sqrt(D))/(2*A), ",x2 = ", (-B+math.sqrt(D))/(2*A)
+        print "x1 = ", (-B-math.sqrt(D))/(2*A), ", x2 = ", (-B+math.sqrt(D))/(2*A)
+        fout.write("x1 = " + str((-B-math.sqrt(D))/(2*A)) + ", x2 = " + str((-B+math.sqrt(D))/(2*A)) + '\n')
+fin.close()
+fout.close()
