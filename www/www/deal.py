@@ -46,25 +46,21 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render_to_response
 index = """<title>Supervisor Search Engine</title>
     <form method="GET" action="/search">
-    Words:<input type="text" name="word">
+    Words:<input type="text" name="words">
     <input type="submit" name="submit">
     </form>"""
-notfound = """<title>Not Found</title>
-    Click <a href="/search">here</a> to go back."""
 @csrf_exempt
 def search(request):
     if not request.GET.has_key('submit'):
         return HttpResponse(index)
-    words = wordSplit.split(str(request.GET['word']).lower())
+    words = wordSplit.split(str(request.GET['words']).lower())
     res = set(dic[''])
     for word in words:
         if not dic.has_key(word):
             res = list()
             break
         res &= set(dic[word])
-    if not res:
-        return HttpResponse(notfound)
     tmp = list()
     for x in res:
         tmp.append(URL[x])
-    return render_to_response('res.html', {'result' : tmp})
+    return render_to_response('res.html', {'result': tmp, 'number': len(tmp), 'words': str(request.GET['words'])})

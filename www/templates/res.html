@@ -1,6 +1,15 @@
-<h2>Result</h2>
-{%for x in result%}
-<a href={{x.url}}>{{x.title}}</a>
-<p>{{x.sub}}</p>
-{%endfor%}
-Click <a href="/search">here</a> to go back.
+<title>Result of "{{words}}"</title>
+    <h2>Result number: {{number}}</h2>
+    <p>Click <a href="/search">here</a> to go back.</p>
+    {%if result%}
+        <table border="1">
+        <tr><th>Name</th><th>Description</th></tr>
+        {%for x in result%}
+        <tr>
+            <td><a href={{x.url}}>{{x.title}}</a></td>
+            <td>{{x.sub}}</td>
+        </tr>
+        {%endfor%}
+    {%else%}
+        <p>No result found, please check your input.</p>
+    {%endif%}
