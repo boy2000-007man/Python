@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import re
-wordSplit = re.compile('\s*')
+wordSplit = re.compile('\s+')
 replace = re.compile('\n|\t|\r|<br>|\W|_')
+endline = re.compile('\r<br>')
 
 fin = file('data.txt', 'r')
 totalWord = list()
@@ -18,13 +19,18 @@ def process():
     dic['title'] = line
     line = fin.readline()
     dic['sub'] = line
-    URL.append(dic)
     words = wordSplit.split(replace.sub(' ', dic['title'].lower())) + wordSplit.split(replace.sub(' ', dic['sub'].lower()))
     while 1:
         line = fin.readline()
         if line == '%%\n':
             break
         words += wordSplit.split(replace.sub(' ', line.lower()))
+    line = fin.readline()
+    dic['content'] = endline.split(line)
+    #print dic['content']
+    URL.append(dic)
+    words += wordSplit.split(replace.sub(' ', line.lower()))
+    fin.readline()
     tmp = set(words)
     totalWord.append(tmp)
     global wordSet
@@ -62,5 +68,16 @@ def search(request):
         res &= set(dic[word])
     tmp = list()
     for x in res:
+        URL[x]['find'] = list()
+        for t in URL[x]['content']:
+            z = ' '+t+' '
+            k = False
+            for word in words:
+                if re.search('\W'+word+'\W', ' '+t+' ', re.I):
+                    k = True
+                    j = re.compile(word, re.I)
+                    z = j.sub('<font color=red>'+word+'</font>', z)
+            if k:
+                URL[x]['find'].append(z)
         tmp.append(URL[x])
     return render_to_response('res.html', {'result': tmp, 'number': len(tmp), 'words': str(request.GET['words'])})

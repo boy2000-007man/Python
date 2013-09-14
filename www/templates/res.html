@@ -9,6 +9,17 @@
             <td><a href={{x.url}}>{{x.title}}</a></td>
             <td>{{x.sub}}</td>
         </tr>
+        <tr>
+            <td></td>
+            <td>{%if x.find%}
+                    {%for t in x.find%}
+                    <br>{{t|safe}}<br>
+                    {%endfor%}<br>
+                {%else%}
+                <font color=red>The words are not in the main body!</font>
+                {%endif%}
+            </td>
+        </tr>
         {%endfor%}
     {%else%}
         <p>No result found, please check your input.</p>
