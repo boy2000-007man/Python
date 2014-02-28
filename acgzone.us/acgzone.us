@@ -18,24 +18,25 @@ print 'start login...'
 urlOpener.open(request).read()
 print 'finish login...'
 
-fout = file('index.html', 'w')
-fout.write('<html>\n<title>index of acgzone.us</title>\n<body>\n')
-fout.write('<table border="0">\n')
-fout.write('<tr><th>name</th><th>picture</th></tr>\n')
+#fout = file('index.html', 'w')
+#fout.write('<html>\n<title>index of acgzone.us</title>\n<body>\n')
+#fout.write('<table border="0">\n')
+#fout.write('<tr><th>name</th><th>picture</th></tr>\n')
 titleRule = re.compile('<h1 class="entry-title"><a href="http://acgzone.us/(?P<num>[0-9]*)[^>]*>(?P<name>[^<]*)</a></h1>[\s\S]*?(?P<pic>http://[\S]*?\.jpg)')
 #catch
-import thread
 def getJpg(name, url):
     dat = urllib.urlopen(url).read()
     op = open(name, "wb")
     op.write(dat)
     op.close()
+import thread, time
 for x in range(1, 1000):
     html = urlOpener.open(urllib2.Request('http://acgzone.us/page/%d' %x)).read()
     result = titleRule.findall(html)
     for i in result:
-        fout.write('<tr><td><a href=http://acgzone.us/' + i[0] + '>' + i[1] + '</a></td><td><img src="' + i[0] + '.jpg"/></td></tr>\n')
+        #fout.write('<tr><td><a href=http://acgzone.us/' + i[0] + '>' + i[1] + '</a></td><td><img src="' + i[0] + '.jpg"/></td></tr>\n')
         print i[0], i[1], 'start download picture...'
         #urllib.urlretrieve(i[2], '%s.jpg' %i[0])
         thread.start_new_thread(getJpg, (i[0] + '.jpg', i[2]))
-fout.write('</body></html>')
+    time.sleep(1)
+#fout.write('</body></html>')
